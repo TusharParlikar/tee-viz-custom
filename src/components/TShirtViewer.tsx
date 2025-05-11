@@ -1,7 +1,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, OrbitControls, useTexture, PerspectiveCamera } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { Suspense } from 'react';
 import * as THREE from 'three';
 import Loader from './Loader';
@@ -24,13 +24,13 @@ const TShirtModel = ({ color, logoTexture }: { color: string; logoTexture: THREE
       {/* Front part of T-shirt */}
       <mesh position={[0, 0, 0]} castShadow>
         <boxGeometry args={[3, 4, 0.2]} />
-        <meshStandardMaterial color={color} />
+        <meshStandardMaterial color={color as any} />
         
         {/* Apply logo texture to front if available */}
         {logoTexture && (
           <mesh position={[0, 0.5, 0.11]}>
             <planeGeometry args={[2, 2]} />
-            <meshStandardMaterial map={logoTexture} transparent opacity={1} />
+            <meshStandardMaterial map={logoTexture as any} transparent opacity={1} />
           </mesh>
         )}
       </mesh>
@@ -38,17 +38,17 @@ const TShirtModel = ({ color, logoTexture }: { color: string; logoTexture: THREE
       {/* Shoulders/sleeves */}
       <mesh position={[-1.8, 0.7, 0]} castShadow>
         <boxGeometry args={[0.6, 1, 0.2]} />
-        <meshStandardMaterial color={color} />
+        <meshStandardMaterial color={color as any} />
       </mesh>
       <mesh position={[1.8, 0.7, 0]} castShadow>
         <boxGeometry args={[0.6, 1, 0.2]} />
-        <meshStandardMaterial color={color} />
+        <meshStandardMaterial color={color as any} />
       </mesh>
       
       {/* Neck hole */}
       <mesh position={[0, 1.8, 0.1]}>
         <cylinderGeometry args={[0.7, 0.7, 0.3, 32, 1, true]} />
-        <meshStandardMaterial color={color} />
+        <meshStandardMaterial color={color as any} />
       </mesh>
     </group>
   );
