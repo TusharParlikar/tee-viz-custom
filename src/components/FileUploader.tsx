@@ -25,9 +25,9 @@ const FileUploader = ({ onFileUpload }: FileUploaderProps) => {
       return;
     }
 
-    // Check file size (max 2MB)
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error('File is too large. Please upload an image less than 2MB');
+    // Check file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File is too large. Please upload an image less than 10MB');
       return;
     }
 
@@ -93,7 +93,7 @@ const FileUploader = ({ onFileUpload }: FileUploaderProps) => {
           <p className="text-sm text-gray-500">
             Drag and drop your design here, or <span className="text-tshirt-purple">browse</span>
           </p>
-          <p className="text-xs text-gray-400 mt-1">PNG or JPG (max. 2MB)</p>
+          <p className="text-xs text-gray-400 mt-1">PNG or JPG (max. 10MB)</p>
         </div>
       ) : (
         <div className="relative">
