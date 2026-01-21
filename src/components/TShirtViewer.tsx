@@ -70,9 +70,6 @@ const TShirtModel = ({ color, logoTexture }: { color: string; logoTexture: THREE
 // Preload the model
 useGLTF.preload('/model/oversized_t-shirt.glb');
 
-// Preload the model
-useGLTF.preload('/model/oversized_t-shirt.glb');
-
 // Main component
 interface TShirtViewerProps {
   color: string;
