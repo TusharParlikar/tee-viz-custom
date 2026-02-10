@@ -68,10 +68,12 @@ export default {
 				},
 				// Custom colors for t-shirt customizer
 				tshirt: {
-					'purple': '#9b87f5',
-					'blue': '#D3E4FD',
-					'pink': '#FFDEE2',
-					'light-gray': '#F1F0FB',
+					'purple': '#7C3AED',
+					'blue': '#DBEAFE',
+					'pink': '#F9A8D4',
+					'light-gray': '#F5F3FF',
+					'indigo': '#4F46E5',
+					'violet': '#8B5CF6',
 				}
 			},
 			borderRadius: {
@@ -123,7 +125,7 @@ export default {
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-				'hero-pattern': 'linear-gradient(to right, #f1f0fb, #d3e4fd)',
+				'hero-pattern': 'linear-gradient(135deg, #F5F3FF 0%, #DBEAFE 50%, #EDE9FE 100%)',
 			}
 		}
 	},

@@ -8,6 +8,26 @@ A modern, interactive web application that allows users to design and customize 
 ![Three.js](https://img.shields.io/badge/Three.js-0.161.0-000000?logo=three.js)
 ![Vite](https://img.shields.io/badge/Vite-5.4.1-646CFF?logo=vite)
 
+## 🆕 Recent Updates (February 2026)
+
+### Major Features Added
+- ✅ **Front & Back Design Upload** - Upload separate designs for front and back of the t-shirt
+- ✅ **Independent Size Controls** - Separate size options (Small/Medium) for front and back designs
+- ✅ **AI Design Generation** - Prompt-based AI design generator with token limit handling
+- ✅ **Export/Download** - Download your custom t-shirt design as an image
+- ✅ **Premium Color Scheme** - Complete UI overhaul with violet/indigo gradient theme
+- ✅ **Mobile Optimized** - Fully responsive design with mobile-first approach
+- ✅ **Front Design Positioning** - Improved front logo placement for better aesthetics
+- ✅ **WebGL Screenshot Fix** - Fixed black texture issue in exported images
+
+### UI/UX Improvements
+- Modern violet (#7C3AED) and indigo (#4F46E5) color palette
+- Redesigned navbar with hamburger menu for mobile
+- Glass-morphism cards with backdrop blur effects
+- Larger touch targets for mobile interactions
+- Improved spacing and padding across all components
+- Responsive grid layouts with mobile-first ordering
+
 ## 📋 Table of Contents
 
 - [Features](#-features)
@@ -24,20 +44,34 @@ A modern, interactive web application that allows users to design and customize 
 
 ### 🎯 Core Features
 - **3D T-Shirt Visualization** - Interactive 3D model with real-time rendering
-- **Color Customization** - Choose from 8 preset colors or pick a custom color
-- **Image Upload** - Upload logos/designs (PNG/JPG, max 2MB)
+- **Front & Back Design Upload** - Upload separate images for front and back of the t-shirt
+- **Independent Size Controls** - Adjust front and back design sizes independently (Small/Medium)
+- **AI Design Generation** - Create designs using AI prompts with token limit management
+- **Color Customization** - Choose from 8 vivid preset colors or pick a custom color
+- **Export/Download** - Download your custom design as a high-quality image
 - **Interactive Controls** - Rotate, zoom, and pan the 3D model
-- **Real-time Preview** - See your design changes instantly
+- **Real-time Preview** - See your design changes instantly on both sides
 - **Drag & Drop** - Convenient file upload with drag-and-drop support
-- **Responsive Design** - Works seamlessly on desktop and mobile devices
+- **Responsive Design** - Fully optimized for mobile, tablet, and desktop
 - **Toast Notifications** - User-friendly feedback for all actions
 
 ### 🎨 Design Features
-- Modern glassmorphism UI
+- Modern violet/indigo gradient color scheme
+- Glassmorphism UI with backdrop blur effects
 - Smooth animations and transitions
+- Mobile-first responsive layouts
 - Professional gradient backgrounds
-- Intuitive user interface
+- Intuitive tab-based design switching
+- Larger touch targets for mobile (44px minimum)
 - Accessible components (ARIA compliant)
+
+### 📱 Mobile Optimizations
+- Hamburger menu navigation
+- Optimized layout order (viewer first on mobile)
+- Touch-friendly button sizes
+- Responsive spacing and padding
+- Stacked controls on small screens
+- Hidden non-essential elements on mobile
 
 ## 🛠 Tech Stack
 
@@ -179,30 +213,59 @@ Navigate to [http://localhost:5173](http://localhost:5173) (or the port shown in
 - Landing page with feature highlights
 - "Start Customizing" CTA button
 - Overview of how the customizer works
+- Responsive hero section with feature cards
+- Mobile-optimized layout
 
 ### Customize Page
 The customization interface consists of:
 
 1. **Color Picker Section**
-   - 8 preset colors (Purple, Blue, Pink, Green, Yellow, Red, Black, White)
+   - 8 vivid preset colors (Violet, Blue, Pink, Green, Yellow, Red, Black, White)
    - Custom color picker for unlimited color options
    - Real-time color preview on 3D model
+   - Mobile-friendly larger color swatches
 
-2. **File Upload Section**
-   - Drag-and-drop zone for easy uploads
-   - Click to browse file system
-   - Supports PNG and JPG formats (max 2MB)
-   - Image preview after upload
-   - Design appears on the front of the t-shirt
+2. **Design Upload Section**
+   - **Front/Back Tabs** - Switch between front and back design upload
+   - **AI Design Generator**:
+     - Enter creative prompts (e.g., "sunset beach vibes", "geometric patterns")
+     - Generate AI designs with token management
+     - Token limit exceeded warning for plan upgrades
+   - **Manual Upload**:
+     - Drag-and-drop zone for easy uploads
+     - Click to browse file system
+     - Supports PNG and JPG formats (max 10MB)
+     - Image preview after upload
+   - **Size Controls**:
+     - Independent size options for front and back designs
+     - Choose between Small and Medium sizes
+     - Real-time size adjustment on 3D model
 
 3. **3D Viewer**
-   - Interactive 3D t-shirt model
-   - Mouse controls:
-     - Left click + drag: Rotate
-     - Scroll: Zoom in/out
+   - Interactive 3D t-shirt model (GLB format)
+   - Mouse/Touch controls:
+     - Left click/tap + drag: Rotate
+     - Scroll/Pinch: Zoom in/out
      - Right click + drag: Pan
-   - Auto-rotation animation
-   - Real-time design rendering
+   - Real-time design rendering on front and back
+   - Optimized WebGL rendering for screenshots
+   - Mobile-first responsive canvas
+
+4. **Download/Export**
+   - High-quality image export
+   - One-click download button
+   - Preserves design quality with WebGL buffer
+   - Filename includes timestamp
+
+5. **Design Preview Card**
+   - Shows current front and back design filenames
+   - Quick overview of uploaded designs
+   - Mobile-responsive layout
+
+6. **Instructions Card** (Desktop only)
+   - Interactive help guide
+   - Mouse/touch control instructions
+   - File format and size limits
 
 ## 🔧 Development
 
@@ -375,23 +438,27 @@ Contributions are welcome! Please follow these steps:
 
 ## 🐛 Known Issues & Limitations
 
-- Currently uses a placeholder 3D model (box geometry)
-- Texture positioning may need adjustment for different models
-- File size limit is 2MB for uploaded designs
+- File size limit is 10MB for uploaded designs
+- AI design generation is currently a simulated feature (fake API)
 - 3D model performance may vary on older devices
+- Some WebGL features may not work on very old browsers
 
 ## 🔮 Future Enhancements
 
-- [ ] Upload custom 3D models (GLB/GLTF)
-- [ ] Multiple design placement (front, back, sleeves)
-- [ ] Design scaling and positioning controls
-- [ ] Save/export designs
-- [ ] Share designs via URL
-- [ ] Print-ready file generation
+- [ ] Real AI integration (DALL-E, Midjourney, or Stable Diffusion API)
+- [ ] Multiple design placement (sleeves, collar)
+- [ ] Advanced design positioning controls (drag, rotate, scale)
+- [ ] Design layers and opacity controls
+- [ ] Text editor for adding custom text
+- [ ] Print-ready file generation (high-res, CMYK)
 - [ ] Shopping cart integration
 - [ ] User accounts and saved designs
-- [ ] More clothing items (hoodies, hats, etc.)
-- [ ] Advanced texture effects (embroidery, print styles)
+- [ ] Share designs via URL
+- [ ] More clothing items (hoodies, hats, bags, mugs)
+- [ ] Advanced texture effects (embroidery, print styles, distressed)
+- [ ] Design templates library
+- [ ] Collaboration features (share, comment)
+- [ ] 3D model upload (custom GLB/GLTF models)
 
 ## 📄 License
 

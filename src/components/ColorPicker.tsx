@@ -6,15 +6,15 @@ interface ColorPickerProps {
 }
 
 const ColorPicker = ({ onChange }: ColorPickerProps) => {
-  const [selectedColor, setSelectedColor] = useState<string>('#9b87f5');
+  const [selectedColor, setSelectedColor] = useState<string>('#7C3AED');
   
   const colors = [
-    { name: 'Purple', value: '#9b87f5' },
-    { name: 'Blue', value: '#87b1f5' },
-    { name: 'Pink', value: '#f587d4' },
-    { name: 'Green', value: '#87f5c4' },
-    { name: 'Yellow', value: '#f5db87' },
-    { name: 'Red', value: '#f58787' },
+    { name: 'Purple', value: '#7C3AED' },
+    { name: 'Blue', value: '#3B82F6' },
+    { name: 'Pink', value: '#EC4899' },
+    { name: 'Green', value: '#10B981' },
+    { name: 'Yellow', value: '#F59E0B' },
+    { name: 'Red', value: '#EF4444' },
     { name: 'Black', value: '#222222' },
     { name: 'White', value: '#ffffff' },
   ];
@@ -31,14 +31,14 @@ const ColorPicker = ({ onChange }: ColorPickerProps) => {
   };
 
   return (
-    <div className="glass-card p-4">
-      <h3 className="font-medium text-gray-800 mb-3">Choose T-Shirt Color</h3>
-      <div className="flex flex-wrap gap-2 mb-4">
+    <div className="glass-card p-3 sm:p-4">
+      <h3 className="font-medium text-gray-800 mb-2 sm:mb-3">Choose T-Shirt Color</h3>
+      <div className="flex flex-wrap gap-2 sm:gap-2 mb-3 sm:mb-4">
         {colors.map((color) => (
           <button
             key={color.value}
-            className={`w-8 h-8 rounded-full flex items-center justify-center ${
-              selectedColor === color.value ? 'ring-2 ring-offset-2 ring-tshirt-purple' : 'hover:scale-110'
+            className={`w-9 h-9 sm:w-8 sm:h-8 rounded-full flex items-center justify-center ${
+              selectedColor === color.value ? 'ring-2 ring-offset-2 ring-violet-600' : 'hover:scale-110'
             } transition-all duration-200`}
             style={{ backgroundColor: color.value, border: color.value === '#ffffff' ? '1px solid #e5e7eb' : 'none' }}
             onClick={() => handleColorChange(color.value)}

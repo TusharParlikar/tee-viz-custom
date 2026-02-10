@@ -1,13 +1,13 @@
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, Suspense, forwardRef, useImperativeHandle } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, useGLTF, Center } from '@react-three/drei';
-import { Suspense } from 'react';
 import * as THREE from 'three';
 import Loader from './Loader';
+import { toast } from 'sonner';
 
 // Load GLB model
-const TShirtModel = ({ color, logoTexture }: { color: string; logoTexture: THREE.Texture | null }) => {
+const TShirtModel = ({ color, frontLogoTexture, backLogoTexture, frontLogoSize, backLogoSize }: { color: string; frontLogoTexture: THREE.Texture | null; backLogoTexture: THREE.Texture | null; frontLogoSize: { width: number; height: number }; backLogoSize: { width: number; height: number } }) => {
   const groupRef = useRef<THREE.Group>(null);
   const { scene } = useGLTF('/model/oversized_t-shirt.glb');
   
@@ -47,12 +47,28 @@ const TShirtModel = ({ color, logoTexture }: { color: string; logoTexture: THREE
       <Center>
         <primitive object={clonedScene} scale={2.5} />
         
-        {/* Logo/Design on chest area */}
-        {logoTexture && (
-          <mesh position={[0, 3.2, 0.28]} castShadow rotation={[0, 0, 0]} renderOrder={1}>
-            <planeGeometry args={[0.75, 0.75]} />
+        {/* Logo/Design on chest area (front) */}
+        {frontLogoTexture && (
+          <mesh position={[0, 3.4, 0.28]} castShadow rotation={[0, 0, 0]} renderOrder={1}>
+            <planeGeometry args={[frontLogoSize.width, frontLogoSize.height]} />
             <meshBasicMaterial 
-              map={logoTexture} 
+              map={frontLogoTexture} 
+              transparent 
+              side={THREE.FrontSide}
+              toneMapped={false}
+              depthTest={false}
+              depthWrite={false}
+              opacity={1}
+            />
+          </mesh>
+        )}
+        
+        {/* Logo/Design on back area */}
+        {backLogoTexture && (
+          <mesh position={[0, 3.2, -0.28]} castShadow rotation={[0, Math.PI, 0]} renderOrder={1}>
+            <planeGeometry args={[backLogoSize.width, backLogoSize.height]} />
+            <meshBasicMaterial 
+              map={backLogoTexture} 
               transparent 
               side={THREE.FrontSide}
               toneMapped={false}
@@ -73,22 +89,40 @@ useGLTF.preload('/model/oversized_t-shirt.glb');
 // Main component
 interface TShirtViewerProps {
   color: string;
-  designImage: File | null;
+  frontDesignImage: File | null;
+  backDesignImage: File | null;
+  frontDesignSize?: 'small' | 'medium';
+  backDesignSize?: 'small' | 'medium';
 }
 
-const TShirtViewer = ({ color, designImage }: TShirtViewerProps) => {
-  const [logoTexture, setLogoTexture] = useState<THREE.Texture | null>(null);
+const TShirtViewer = forwardRef<{ screenshot: () => void }, TShirtViewerProps>(({ color, frontDesignImage, backDesignImage, frontDesignSize = 'medium', backDesignSize = 'medium' }, ref) => {
+  const [frontLogoTexture, setFrontLogoTexture] = useState<THREE.Texture | null>(null);
+  const [backLogoTexture, setBackLogoTexture] = useState<THREE.Texture | null>(null);
+  const canvasElementRef = useRef<HTMLCanvasElement | null>(null);
+  
+  // Define sizes for the logo based on selection
+  const getSizeValues = (size: 'small' | 'medium') => {
+    switch (size) {
+      case 'small':
+        return { width: 0.5, height: 0.5 };
+      case 'medium':
+        return { width: 0.75, height: 0.75 };
+      default:
+        return { width: 0.75, height: 0.75 };
+    }
+  };
+  
+  const frontLogoSize = getSizeValues(frontDesignSize);
+  const backLogoSize = getSizeValues(backDesignSize);
 
+  // Load front design texture
   useEffect(() => {
-    if (!designImage) {
-      setLogoTexture(null);
+    if (!frontDesignImage) {
+      setFrontLogoTexture(null);
       return;
     }
 
-    // Create a URL for the uploaded image
-    const imageUrl = URL.createObjectURL(designImage);
-
-    // Load the texture
+    const imageUrl = URL.createObjectURL(frontDesignImage);
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load(
       imageUrl,
@@ -96,26 +130,78 @@ const TShirtViewer = ({ color, designImage }: TShirtViewerProps) => {
         loadedTexture.needsUpdate = true;
         loadedTexture.colorSpace = THREE.SRGBColorSpace;
         loadedTexture.flipY = true;
-        setLogoTexture(loadedTexture);
+        setFrontLogoTexture(loadedTexture);
       },
       undefined,
       (err) => {
-        console.error('Error loading texture:', err);
+        console.error('Error loading front texture:', err);
       }
     );
 
-    // Clean up
     return () => {
       URL.revokeObjectURL(imageUrl);
     };
-  }, [designImage]);
+  }, [frontDesignImage]);
+
+  // Load back design texture
+  useEffect(() => {
+    if (!backDesignImage) {
+      setBackLogoTexture(null);
+      return;
+    }
+
+    const imageUrl = URL.createObjectURL(backDesignImage);
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(
+      imageUrl,
+      (loadedTexture) => {
+        loadedTexture.needsUpdate = true;
+        loadedTexture.colorSpace = THREE.SRGBColorSpace;
+        loadedTexture.flipY = true;
+        setBackLogoTexture(loadedTexture);
+      },
+      undefined,
+      (err) => {
+        console.error('Error loading back texture:', err);
+      }
+    );
+
+    return () => {
+      URL.revokeObjectURL(imageUrl);
+    };
+  }, [backDesignImage]);
+
+  // Expose screenshot method to parent
+  useImperativeHandle(ref, () => ({
+    screenshot: () => {
+      if (canvasElementRef.current) {
+        try {
+          const dataUrl = canvasElementRef.current.toDataURL('image/png');
+          const link = document.createElement('a');
+          link.download = `tshirt-design-${Date.now()}.png`;
+          link.href = dataUrl;
+          link.click();
+          toast.success('Design downloaded successfully!');
+        } catch (error) {
+          console.error('Error downloading design:', error);
+          toast.error('Failed to download design');
+        }
+      }
+    },
+  }));
 
   return (
     <div className="h-[400px] md:h-[500px] w-full rounded-lg overflow-hidden relative glass-card">
       <Canvas 
+        ref={(canvas) => {
+          if (canvas) {
+            canvasElementRef.current = canvas as any as HTMLCanvasElement;
+          }
+        }}
         shadows
         gl={{
           antialias: true,
+          preserveDrawingBuffer: true,
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.2,
           outputColorSpace: THREE.SRGBColorSpace
@@ -153,7 +239,7 @@ const TShirtViewer = ({ color, designImage }: TShirtViewerProps) => {
             color="#ffffff"
           />
           
-          <TShirtModel color={color} logoTexture={logoTexture} />
+          <TShirtModel color={color} frontLogoTexture={frontLogoTexture} backLogoTexture={backLogoTexture} frontLogoSize={frontLogoSize} backLogoSize={backLogoSize} />
           <OrbitControls 
             enableZoom={true}
             maxPolarAngle={Math.PI / 1.7}
@@ -165,6 +251,6 @@ const TShirtViewer = ({ color, designImage }: TShirtViewerProps) => {
       </Canvas>
     </div>
   );
-};
+});
 
 export default TShirtViewer;

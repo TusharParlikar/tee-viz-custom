@@ -9,9 +9,9 @@ const Loader = ({ showTip = true }: LoaderProps) => {
   const { progress } = useProgress();
   
   return (
-    <div className="w-full h-full fixed top-0 left-0 flex flex-col items-center justify-center bg-white bg-opacity-80 backdrop-blur-md z-50">
+    <div className="w-full h-full fixed top-0 left-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-lg z-50">
       <div className="flex flex-col items-center">
-        <div className="w-16 h-16 border-4 border-tshirt-purple/30 border-t-tshirt-purple rounded-full animate-spin-slow"></div>
+        <div className="w-16 h-16 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin-slow"></div>
         <p className="mt-4 font-medium text-gray-700">
           {progress.toFixed(0)}%
         </p>

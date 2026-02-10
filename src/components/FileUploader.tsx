@@ -1,15 +1,30 @@
 
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { toast } from "sonner";
 
 interface FileUploaderProps {
   onFileUpload: (file: File) => void;
+  currentFile?: File | null;
+  label?: string;
 }
 
-const FileUploader = ({ onFileUpload }: FileUploaderProps) => {
+const FileUploader = ({ onFileUpload, currentFile, label }: FileUploaderProps) => {
   const [preview, setPreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Update preview when currentFile changes
+  React.useEffect(() => {
+    if (currentFile) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(currentFile);
+    } else {
+      setPreview(null);
+    }
+  }, [currentFile]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -40,7 +55,7 @@ const FileUploader = ({ onFileUpload }: FileUploaderProps) => {
 
     // Pass the file to parent component
     onFileUpload(file);
-    toast.success('Design uploaded successfully!');
+    toast.success(`${label || 'Design'} uploaded successfully!`);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -74,24 +89,22 @@ const FileUploader = ({ onFileUpload }: FileUploaderProps) => {
   };
 
   return (
-    <div className="glass-card p-4">
-      <h3 className="font-medium text-gray-800 mb-3">Upload Design</h3>
-      
+    <div>
       {!preview ? (
         <div
-          className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all ${
-            isDragging ? 'border-tshirt-purple bg-tshirt-purple/5' : 'border-gray-300 hover:border-tshirt-purple'
+          className={`border-2 border-dashed rounded-lg p-4 sm:p-6 text-center cursor-pointer transition-all ${
+            isDragging ? 'border-violet-600 bg-violet-600/5' : 'border-gray-300 hover:border-violet-600'
           }`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={triggerFileInput}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="mx-auto mb-3 text-gray-400">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="mx-auto mb-2 sm:mb-3 text-gray-400">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
           </svg>
           <p className="text-sm text-gray-500">
-            Drag and drop your design here, or <span className="text-tshirt-purple">browse</span>
+            Drag and drop {label ? label.toLowerCase() : ''} design here, or <span className="text-violet-600">browse</span>
           </p>
           <p className="text-xs text-gray-400 mt-1">PNG or JPG (max. 10MB)</p>
         </div>
